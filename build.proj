@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2014 Clarius Consulting SA
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<Project ToolsVersion="4.0"
+         DefaultTargets="Build"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
+		<BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
+		<_PackageVersion Condition="'$(PackageVersion)' == ''">0.1</_PackageVersion>
+		<_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>		
+		<TrackFileAccess>false</TrackFileAccess>
+		
+		<!-- MyGet already provides a %nuget% environment variable with its own nuget path -->
+		<nuget Condition="'$(nuget)' == ''">$(SolutionDir).nuget\nuget.exe</nuget>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<NuSpec Include="**\*.nuspec" />
+		<PackageConfig Include="**\packages.config" />
+	</ItemGroup>
+		
+    <Target Name="Build" DependsOnTargets="BuildNuGet" />
+
+	<Target Name="BuildNuGet" Inputs="@(NuSpec)" Outputs="%(Identity)-BATCH" DependsOnTargets="_DownloadNuGet;RestorePackages">
+		<PropertyGroup>
+			<ReadmePath>%(NuSpec.RootDir)%(NuSpec.Directory)Readme.txt</ReadmePath>
+			<Readme Condition="Exists('$(ReadmePath)')">$([System.IO.File]::ReadAllText('$(ReadmePath)'))</Readme>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_NuSpecTransform Include="@(NuSpec)" Condition="'$(Readme)' != ''">
+				<Find><![CDATA[<releaseNotes />|<releaseNotes/>|<releaseNotes>.*</releaseNotes>]]></Find>
+				<ReplaceWith><![CDATA[<releaseNotes>$(Readme)</releaseNotes>]]></ReplaceWith>
+				<Options>Singleline</Options>
+			</_NuSpecTransform>
+		</ItemGroup>
+
+		<Message Text="Updating %(NuSpec.Filename)%(NuSpec.Extension) release notes from existing readme file"
+				 Condition="'$(Readme)' != ''"
+				 Importance="High" />
+		<RegexTransform Items="@(_NuSpecTransform)" Condition="'$(Readme)' != ''" />
+
+		<Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(_PackageVersion)&quot;"
+              ContinueOnError="false" />
+	</Target>
+
+	<Target Name="RestorePackages" Condition="'@(PackageConfig)' != ''">
+		<Message Text="Restoring NuGet packages..." Importance="High" />
+		<Exec Command="$(nuget) restore %(PackageConfig.FullPath) -NonInteractive -Verbosity quiet" />
+	</Target>
+
+	<Target Name="_DownloadNuGet" Condition="!Exists('$(nuget)')">
+		<MakeDir Directories="$(BuildRoot).nuget" />
+		<DownloadNuGet OutputFilename="$(nuget)" />
+	</Target>
+
+	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+		<ParameterGroup>
+			<OutputFilename ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Reference Include="System.Core" />
+			<Using Namespace="System" />
+			<Using Namespace="System.IO" />
+			<Using Namespace="System.Net" />
+			<Using Namespace="Microsoft.Build.Framework" />
+			<Using Namespace="Microsoft.Build.Utilities" />
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+         try {
+             OutputFilename = Path.GetFullPath(OutputFilename);
+
+             Log.LogMessage("Downloading latest version of NuGet.exe...");
+             WebClient webClient = new WebClient();
+             webClient.DownloadFile("https://nuget.org/nuget.exe", OutputFilename);
+
+             return true;
+         }
+         catch (Exception ex) {
+             Log.LogErrorFromException(ex);
+             return false;
+         }
+       ]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+	<!--
+    ============================================================
+				RegexTransform
+
+    Transforms the input Items parameter by evaluating the 
+    regular expression in their Find metadata and 
+    replacing with their ReplaceWith metadata. Optional, the 
+    options for the regular expression evaluation can be specified.
+    
+    Example input item:
+            <RegexTransform Include="$(BuildRoot)Src\GlobalAssemblyInfo.cs">
+                <Find>AssemblyFileVersion\(".*?"\)</Find>
+                <ReplaceWith>AssemblyFileVersion("$(FileVersion)")</ReplaceWith>
+                <Options>Multiline | IgnorePatternWhitespace</Options>
+            </RegexTransform>
+    
+    Invoking the target:
+        <RegexTransform Items="@(RegexTransform)" />   
+    ============================================================
+    -->
+	<UsingTask TaskName="RegexTransform"
+               TaskFactory="CodeTaskFactory"
+               AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+		<ParameterGroup>
+			<Items ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System.IO" />
+			<Using Namespace="System.Text.RegularExpressions" />
+			<Using Namespace="Microsoft.Build.Framework" />
+			<Code Type="Fragment"
+                  Language="cs">
+				<![CDATA[
+           foreach(var item in Items)
+           {
+             string fileName = item.GetMetadata("FullPath");
+             string find = item.GetMetadata("Find");
+             string replaceWith = item.GetMetadata("ReplaceWith");
+             string optionsValue = item.GetMetadata("Options") ?? "";
+             
+             var options = string.IsNullOrWhiteSpace(optionsValue) ? 
+                RegexOptions.None : (RegexOptions)Enum.Parse(typeof(RegexOptions), optionsValue.Replace('|', ','));
+
+             if(!File.Exists(fileName))
+             {
+               Log.LogError("Could not find file: {0}", fileName);
+               return false;
+             }
+             string content = File.ReadAllText(fileName);
+             File.WriteAllText(
+               fileName,
+               Regex.Replace(
+                 content,
+                 find,
+                 replaceWith, 
+                 options
+               )
+             );
+           }
+         ]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+</Project>

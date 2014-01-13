@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>ClariusLabs.TransformOnBuild</id>
+		<version>1.0</version>
+		<title>Transform Text Templates On Build</title>
+		<description>Automatically transforms on build all files with a build action of `None` that have the 
+        `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom tools associated, without 
+        requiring the installation of any Visual Studio SDK.</description>
+		<authors>Daniel Cazzulino</authors>
+        <owners>clariuslabs, danielkzu</owners>
+        <language>en-US</language>
+        <licenseUrl>https://github.com/clariuslabs/TransformOnBuild/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/clariuslabs/TransformOnBuild</projectUrl>
+        <iconUrl>https://raw2.github.com/clariuslabs/TransformOnBuild/master/icon/128.png</iconUrl>
+        <tags>visualstudio t4 text template transformation clariuslabs</tags>
+	</metadata>
+</package>
