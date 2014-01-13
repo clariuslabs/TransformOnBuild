@@ -1,4 +1,4 @@
-![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/20.png) Transform Text Templates On Build
+![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/32.png) Transform Text Templates On Build
 ============
 
 Automatically transforms on build all files with a build action of `None` that have the `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom tools associated.
