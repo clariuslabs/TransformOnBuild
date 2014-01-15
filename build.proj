@@ -64,7 +64,7 @@
 	</Target>
 
     <Target Name="PushNuGet" Condition="'$(AutoPush)' == 'true'">
-        <Exec Command="&quot;$(nuget)&quot; push &quot;$(DropDir)/*&quot;" ContinueOnError="false" />
+        <Exec Command="&quot;$(nuget)&quot; push &quot;$(DropDir)\*&quot;" ContinueOnError="false" />
     </Target>
    
 	<Target Name="RestorePackages" Condition="'@(PackageConfig)' != ''">
