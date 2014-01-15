@@ -19,8 +19,10 @@
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
+        <AutoPush Condition="'$(AutoPush)' == ''">false</AutoPush>
 		<BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
 		<BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
+        <DropDir>$(MSBuildThisFileDirectory)drop</DropDir>
 		<_PackageVersion Condition="'$(PackageVersion)' == ''">0.1</_PackageVersion>
 		<_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>		
 		<TrackFileAccess>false</TrackFileAccess>
@@ -34,9 +36,9 @@
 		<PackageConfig Include="**\packages.config" />
 	</ItemGroup>
 		
-    <Target Name="Build" DependsOnTargets="BuildNuGet" />
+    <Target Name="Build" DependsOnTargets="BuildNuGet;PushNuGet" />
 
-	<Target Name="BuildNuGet" Inputs="@(NuSpec)" Outputs="%(Identity)-BATCH" DependsOnTargets="_DownloadNuGet;RestorePackages">
+	<Target Name="BuildNuGet" Inputs="@(NuSpec)" Outputs="%(Identity)-BATCH" DependsOnTargets="_DownloadNuGet;RestorePackages">      
 		<PropertyGroup>
 			<ReadmePath>%(NuSpec.RootDir)%(NuSpec.Directory)Readme.txt</ReadmePath>
 			<Readme Condition="Exists('$(ReadmePath)')">$([System.IO.File]::ReadAllText('$(ReadmePath)'))</Readme>
@@ -55,10 +57,16 @@
 				 Importance="High" />
 		<RegexTransform Items="@(_NuSpecTransform)" Condition="'$(Readme)' != ''" />
 
-		<Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(_PackageVersion)&quot;"
+        <MakeDir Directories="$(DropDir)" Condition="!Exists('$(DropDir)')" />
+
+        <Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(_PackageVersion)&quot; -OutputDirectory &quot;$(DropDir)&quot;"
               ContinueOnError="false" />
 	</Target>
 
+    <Target Name="PushNuGet" Condition="'$(AutoPush)' == 'true'">
+        <Exec Command="&quot;$(nuget)&quot; push &quot;$(DropDir)/*&quot;" ContinueOnError="false" />
+    </Target>
+   
 	<Target Name="RestorePackages" Condition="'@(PackageConfig)' != ''">
 		<Message Text="Restoring NuGet packages..." Importance="High" />
 		<Exec Command="$(nuget) restore %(PackageConfig.FullPath) -NonInteractive -Verbosity quiet" />
