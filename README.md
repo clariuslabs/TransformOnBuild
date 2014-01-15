@@ -1,7 +1,5 @@
 # ![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/32.png) Transform Text Templates On Build [![Build Statis](https://www.myget.org/BuildSource/Badge/clarius?identifier=6f42d5d3-ec58-4246-91a7-8722dbb023ea)](https://www.myget.org/gallery/clarius)
 
-============
-
 Automatically transforms on build all files with a build action of `None` that have the `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom tools associated.
 
 ## Installation
