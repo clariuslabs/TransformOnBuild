@@ -12,3 +12,12 @@ PM> Install-Package Clarius.TransformOnBuild
 ```
 
 Unlike the [officially suggested way](http://msdn.microsoft.com/en-us/library/ee847423.aspx), this package does not require any Visual Studio SDK to be installed on the machine or build server.
+
+If a full Visual Studio installation is not available on the build server, you can still transform the templates by placing the TextTransform.exe in a known location. Then, you can simply override the path expected by the targets with:
+
+	<PropertyGroup>
+		<TextTransformPath>MyTools\TextTransform.exe</TextTransformPath>
+	</PropertyGroup>
+
+
+With that in place, the transformation will be performed using that file instead, if found.

@@ -17,8 +17,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	
 	<PropertyGroup>
+		<TextTransformPath Condition="'$(TextTransformPath)' == ''">$(CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</TextTransformPath>
         <!-- Initial default value -->
-		<_TransformExe>$(CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</_TransformExe>
+		<_TransformExe>$(TextTransformPath)</_TransformExe>
 	    <!-- If explicit VS version, override default -->
         <_TransformExe Condition="'$(VisualStudioVersion)' != ''">$(CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</_TransformExe>
         <!-- Cascading probing if file not found -->
