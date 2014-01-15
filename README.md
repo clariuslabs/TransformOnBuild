@@ -1,4 +1,4 @@
-# ![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/32.png) Transform Text Templates On Build [![Build Statis](https://www.myget.org/BuildSource/Badge/clarius?identifier=6f42d5d3-ec58-4246-91a7-8722dbb023ea)](https://www.myget.org/gallery/clarius)
+# ![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/32.png) Transform Text Templates On Build 
 
 Automatically transforms on build all files with a build action of `None` that have the `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom tools associated.
 
@@ -20,3 +20,14 @@ If a full Visual Studio installation is not available on the build server, you c
 
 
 With that in place, the transformation will be performed using that file instead, if found.
+
+
+[![Build Status](https://www.myget.org/BuildSource/Badge/clarius?identifier=6f42d5d3-ec58-4246-91a7-8722dbb023ea "Build Status")](https://www.myget.org/gallery/clarius)
+====================
+This project is sponsored by Clarius Labs
+
+[![Clarius Labs][2]][1]
+
+
+  [1]: http://clariuslabs.github.io/
+  [2]: http://clariuslabs.github.io/media/clariuslabs.png (Clarius Labs Logo)
