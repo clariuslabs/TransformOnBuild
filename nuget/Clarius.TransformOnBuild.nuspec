@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Clarius.TransformOnBuild</id>
-		<version>1.0</version>
+		<version>1.1</version>
 		<title>Transform Text Templates On Build</title>
 		<description>Automatically transforms on build all files with a build action of `None` that have the 
         `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom tools associated, without 
