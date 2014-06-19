@@ -19,11 +19,9 @@
 	<PropertyGroup>
 		<_CommonProgramFiles>$(CommonProgramFiles(x86))</_CommonProgramFiles>
 		<_CommonProgramFiles Condition=" '$(_CommonProgramFiles)' == '' ">$(CommonProgramFiles)</_CommonProgramFiles>		
-		<TextTransformPath Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</TextTransformPath>
+		<TextTransformPath Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformPath>
         <!-- Initial default value -->
 		<_TransformExe>$(TextTransformPath)</_TransformExe>
-	    <!-- If explicit VS version, override default -->
-        <_TransformExe Condition="'$(VisualStudioVersion)' != ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</_TransformExe>
         <!-- Cascading probing if file not found -->
         <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe"</_TransformExe>
         <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe"</_TransformExe>
