@@ -17,7 +17,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	
 	<PropertyGroup>
-		<_CommonProgramFiles>$(CommonProgramFiles(x86))</_CommonProgramFiles>
+        <_CommonProgramFiles>$([System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'))<_CommonProgramFiles>
 		<_CommonProgramFiles Condition=" '$(_CommonProgramFiles)' == '' ">$(CommonProgramFiles)</_CommonProgramFiles>		
 		<TextTransformPath Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformPath>
         <!-- Initial default value -->
