@@ -21,3 +21,17 @@ If a full Visual Studio installation is not available on the build server, you c
 
 
 With that in place, the transformation will be performed using that file instead, if found.
+
+If you would like to pass parameters to TextTransform.exe, define a group of TextTransformParameter items as follows:
+
+	<ItemGroup>
+		<TextTransformParameter Include="Foo">
+			<Value>bar</Value>
+		</TextTransformParameter>
+		<TextTransformParameter Include="Config">
+			<Value>$(Configuration)</Value>
+		</TextTransformParameter>
+	</ItemGroup>
+
+
+The Include attribute specifies the parameter name, and the Value metadata element specifies the parameter value.

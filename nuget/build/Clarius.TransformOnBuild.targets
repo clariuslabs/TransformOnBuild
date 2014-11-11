@@ -41,8 +41,13 @@
                             Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'" />
         </ItemGroup>
 
+        <PropertyGroup>
+            <!-- TextTransformParameters is an external item list used to create parameter name/value pairs for the command line. -->
+            <_TransformExeParameters>@(TextTransformParameter->'-a "!!%(Identity)!%(Value)"', ' ')</_TransformExeParameters>
+        </PropertyGroup>
+
         <!-- Perform task batching for each file -->
-        <Exec Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
+        <Exec Command="&quot;$(_TransformExe)&quot; $(_TransformExeParameters) &quot;%(_TextTransform.FullPath)&quot;"
               Condition="'%(_TextTransform.Identity)' != ''"/>
         
     </Target>
