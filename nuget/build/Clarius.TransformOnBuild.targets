@@ -23,12 +23,12 @@
         <!-- Initial default value -->
 		<_TransformExe>$(TextTransformPath)</_TransformExe>
         <!-- Cascading probing if file not found -->
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe"</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe"</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\12.0\TextTransform.exe"</_TransformExe>
+        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</_TransformExe>
+        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe</_TransformExe>
+        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\12.0\TextTransform.exe</_TransformExe>
         <!-- Future proof 'til VS2013+2 -->
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\13.0\TextTransform.exe"</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe"</_TransformExe>
+        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\13.0\TextTransform.exe</_TransformExe>
+        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
 	</PropertyGroup>
 
     <Target Name="TransformOnBuild" AfterTargets="BeforeBuild">
