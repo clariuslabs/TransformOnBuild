@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-	<metadata>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata minClientVersion="2.8">
 		<id>Clarius.TransformOnBuild</id>
 		<version>1.1</version>
 		<title>Transform Text Templates On Build</title>
@@ -14,5 +14,6 @@
         <projectUrl>https://github.com/clariuslabs/TransformOnBuild</projectUrl>
         <iconUrl>https://raw2.github.com/clariuslabs/TransformOnBuild/master/icon/128.png</iconUrl>
         <tags>visualstudio t4 text template transformation clariuslabs</tags>
+        <developmentDependency>true</developmentDependency>
 	</metadata>
 </package>
