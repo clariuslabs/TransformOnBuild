@@ -42,7 +42,7 @@
         </ItemGroup>
 
         <PropertyGroup>
-            <!-- TextTransformParameters is an external item list used to create parameter name/value pairs for the command line. -->
+            <!-- TextTransformParameter is an external item list used to create parameter name/value pairs for the command line. -->
             <_TransformExeParameters>@(TextTransformParameter->'-a "!!%(Identity)!%(Value)"', ' ')</_TransformExeParameters>
         </PropertyGroup>
 
