@@ -35,3 +35,11 @@ If you would like to pass parameters to TextTransform.exe, define a group of Tex
 
 
 The Include attribute specifies the parameter name, and the Value metadata element specifies the parameter value.
+
+To access the parameter values from your text template, set `hostspecific` in the `template` directive and invoke `this.Host.ResolveParameterValue(...)`. For example:
+
+	<#@ template language="C#" hostspecific="true" #>
+	<#
+	    var foo = this.Host.ResolveParameterValue("", "", "Foo");
+	    var config = this.Host.ResolveParameterValue("", "", "Config");
+	#>
