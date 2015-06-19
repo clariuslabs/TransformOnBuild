@@ -41,6 +41,11 @@
   </PropertyGroup>
 
   <UsingTask
+    TaskName="Clarius.TransformOnBuild.MSBuild.Task.TransformOnBuildTask" 
+    AssemblyFile="Clarius.TransformOnBuild.MSBuild.Task.dll"
+  />
+
+  <UsingTask
     TaskName="SubstituteTemplateProperties"
     TaskFactory="CodeTaskFactory"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
@@ -72,6 +77,8 @@
   <Target
     Name="TransformOnBuild"
     AfterTargets="BeforeCompile">
+    <TransformOnBuildTask />
+
     <Error
       Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." 
       Condition="!Exists('$(_TransformExe)')"
