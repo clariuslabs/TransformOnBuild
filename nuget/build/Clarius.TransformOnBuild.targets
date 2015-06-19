@@ -50,11 +50,20 @@
         <Exec Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
               Condition="'%(_TextTransform.Identity)' != ''"/>
 
-        <Move
-            SourceFiles="%(_TextTransform.Identity).clarius_bak"
-            DestinationFiles="%(_TextTransform.Identity)"
-        />
-
+        <CallTarget Targets="RestoreBackups" />
+        <OnError ExecuteTargets="RestoreBackups" />
     </Target>
-    
+
+    <Target Name="RestoreBackups">
+      <ItemGroup>
+        <_TextTransform
+          Include="@(None)"
+          Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'"
+        />
+      </ItemGroup>
+      <Move
+        SourceFiles="%(_TextTransform.Identity).clarius_bak"
+        DestinationFiles="%(_TextTransform.Identity)"
+      />
+    </Target>
 </Project>
