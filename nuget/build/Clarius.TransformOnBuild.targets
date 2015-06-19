@@ -31,7 +31,7 @@
         <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
 	</PropertyGroup>
 
-    <Target Name="TransformOnBuild" AfterTargets="BeforeBuild">
+    <Target Name="TransformOnBuild" AfterTargets="BeforeCompile">
 
         <Error Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." 
                 Condition="!Exists('$(_TransformExe)')"/>
