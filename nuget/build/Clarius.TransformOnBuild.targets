@@ -49,7 +49,12 @@
         <!-- Perform task batching for each file -->
         <Exec Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
               Condition="'%(_TextTransform.Identity)' != ''"/>
-        
+
+        <Move
+            SourceFiles="%(_TextTransform.Identity).clarius_bak"
+            DestinationFiles="%(_TextTransform.Identity)"
+        />
+
     </Target>
     
 </Project>
