@@ -38,5 +38,15 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 throw new Exception("Could not extract projectInstance from " + targetCallbackType.FullName);
             return (ProjectInstance) projectInstanceField.GetValue(targetBuilderCallback);
         }
+
+        private string GetPropertyValue(string propertyName, bool throwIfNotFound = false)
+        {
+            string propertyValue;
+            if (_properties.TryGetValue(propertyName, out propertyValue))
+                return propertyValue;
+            if (throwIfNotFound)
+                throw new Exception(string.Format("Could not resolve property $({0})", propertyName));
+            return "";
+        }
     }
 }
