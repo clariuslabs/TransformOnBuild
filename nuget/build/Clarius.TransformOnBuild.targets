@@ -40,6 +40,35 @@
       Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
   </PropertyGroup>
 
+  <UsingTask
+    TaskName="SubstituteTemplateProperties"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <TemplateFile
+        ParameterType="System.String"
+        Required="true"
+      />
+    </ParameterGroup>
+    <Task>
+      <Using
+        Namespace="System.IO"
+      />
+      <Using
+        Namespace="System.Text.RegularExpressions"
+      />
+      <Code
+        Type="Fragment"
+        Language="cs">
+<![CDATA[
+    var template = File.ReadAllText(TemplateFile);
+    template = Regex.Replace(template, @"\$\(SolutionDir\)", "");
+    File.WriteAllText(TemplateFile, template);
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
   <Target
     Name="TransformOnBuild"
     AfterTargets="BeforeCompile">
@@ -58,6 +87,10 @@
     <Copy
       SourceFiles="%(_TextTransform.FullPath)"
       DestinationFiles="%(_TextTransform.FullPath).clarius_bak"
+    />
+
+    <SubstituteTemplateProperties
+      TemplateFile="%(_TextTransform.FullPath)"
     />
 
     <!-- Perform task batching for each file -->
