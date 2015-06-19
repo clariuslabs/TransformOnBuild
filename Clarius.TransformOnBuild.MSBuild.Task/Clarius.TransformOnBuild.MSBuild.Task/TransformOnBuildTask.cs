@@ -41,11 +41,21 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             foreach (var templateItem in textTransform)
             {
                 var templatePath = templateItem.GetMetadataValue("FullPath");
+                var templateBackupPath = templatePath + ".bak_clarius";
+                try
+                {
+                    File.Copy(templatePath, templateBackupPath, overwrite: true);
 
-                var result = RunTransformTool(templatePath);
+                    var result = RunTransformTool(templatePath);
 
-                if (!result)
-                    return false;
+                    if (!result)
+                        return false;
+                }
+                finally
+                {
+                    File.Copy(templateBackupPath, templatePath, overwrite: true);
+                    File.Delete(templateBackupPath);
+                }
             }
 
             return true;
