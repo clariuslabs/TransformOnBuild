@@ -14,56 +14,77 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	
-	<PropertyGroup>
-        <_CommonProgramFiles>$([System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'))</_CommonProgramFiles>
-		<_CommonProgramFiles Condition=" '$(_CommonProgramFiles)' == '' ">$(CommonProgramFiles)</_CommonProgramFiles>		
-		<TextTransformPath Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformPath>
-        <!-- Initial default value -->
-		<_TransformExe>$(TextTransformPath)</_TransformExe>
-        <!-- Cascading probing if file not found -->
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\12.0\TextTransform.exe</_TransformExe>
-        <!-- Future proof 'til VS2013+2 -->
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\13.0\TextTransform.exe</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
-	</PropertyGroup>
+<Project
+  ToolsVersion="4.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_CommonProgramFiles>$([System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'))</_CommonProgramFiles>
+    <_CommonProgramFiles
+      Condition=" '$(_CommonProgramFiles)' == '' ">$(CommonProgramFiles)</_CommonProgramFiles>
+    <TextTransformPath
+      Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformPath>
 
-    <Target Name="TransformOnBuild" AfterTargets="BeforeCompile">
+    <!-- Initial default value -->
+    <_TransformExe>$(TextTransformPath)</_TransformExe>
+    <!-- Cascading probing if file not found -->
+    <_TransformExe
+      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</_TransformExe>
+    <_TransformExe
+      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe</_TransformExe>
+    <_TransformExe
+      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\12.0\TextTransform.exe</_TransformExe>
+    <!-- Future proof 'til VS2013+2 -->
+    <_TransformExe
+      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\13.0\TextTransform.exe</_TransformExe>
+    <_TransformExe
+      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
+  </PropertyGroup>
 
-        <Error Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." 
-                Condition="!Exists('$(_TransformExe)')"/>
+  <Target
+    Name="TransformOnBuild"
+    AfterTargets="BeforeCompile">
+    <Error
+      Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." 
+      Condition="!Exists('$(_TransformExe)')"
+    />
 
-        <ItemGroup>
-            <_TextTransform Include="@(None)"
-                            Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'" />
-        </ItemGroup>
-
-        <Copy
-            SourceFiles="%(_TextTransform.Identity)"
-            DestinationFiles="%(_TextTransform.Identity).clarius_bak"
-        />
-
-        <!-- Perform task batching for each file -->
-        <Exec Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
-              Condition="'%(_TextTransform.Identity)' != ''"/>
-
-        <CallTarget Targets="RestoreBackups" />
-        <OnError ExecuteTargets="RestoreBackups" />
-    </Target>
-
-    <Target Name="RestoreBackups">
-      <ItemGroup>
-        <_TextTransform
-          Include="@(None)"
-          Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'"
-        />
-      </ItemGroup>
-      <Move
-        SourceFiles="%(_TextTransform.Identity).clarius_bak"
-        DestinationFiles="%(_TextTransform.Identity)"
+    <ItemGroup>
+      <_TextTransform
+        Include="@(None)"
+        Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'"
       />
-    </Target>
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="%(_TextTransform.Identity)"
+      DestinationFiles="%(_TextTransform.Identity).clarius_bak"
+    />
+
+    <!-- Perform task batching for each file -->
+    <Exec
+      Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
+      Condition="'%(_TextTransform.Identity)' != ''"
+    />
+
+    <CallTarget
+      Targets="RestoreBackups"
+    />
+
+    <OnError
+      ExecuteTargets="RestoreBackups"
+    />
+  </Target>
+
+  <Target Name="RestoreBackups">
+    <ItemGroup>
+      <_TextTransform
+        Include="@(None)"
+        Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'"
+      />
+    </ItemGroup>
+    <Move
+      SourceFiles="%(_TextTransform.Identity).clarius_bak"
+      DestinationFiles="%(_TextTransform.Identity)"
+    />
+  </Target>
 </Project>
