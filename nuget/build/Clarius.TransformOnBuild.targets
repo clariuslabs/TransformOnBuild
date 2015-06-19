@@ -41,6 +41,11 @@
                             Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'" />
         </ItemGroup>
 
+        <Copy
+            SourceFiles="%(_TextTransform.Identity)"
+            DestinationFiles="%(_TextTransform.Identity).clarius_bak"
+        />
+
         <!-- Perform task batching for each file -->
         <Exec Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
               Condition="'%(_TextTransform.Identity)' != ''"/>
