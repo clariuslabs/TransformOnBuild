@@ -36,7 +36,15 @@
 		<PackageConfig Include="**\packages.config" />
 	</ItemGroup>
 		
-    <Target Name="Build" DependsOnTargets="BuildNuGet;PushNuGet" />
+    <Target Name="Build" DependsOnTargets="BuildMSBuildTask;BuildNuGet;PushNuGet" />
+
+    <Target
+      Name="BuildMSBuildTask">
+      <MSBuild
+        Projects="Clarius.TransformOnBuild.MSBuild.Task\Clarius.TransformOnBuild.MSBuild.Task.sln"
+      />
+    </Target>
+
 
 	<Target Name="BuildNuGet" Inputs="@(NuSpec)" Outputs="%(Identity)-BATCH" DependsOnTargets="_DownloadNuGet;RestorePackages">      
 		<PropertyGroup>
