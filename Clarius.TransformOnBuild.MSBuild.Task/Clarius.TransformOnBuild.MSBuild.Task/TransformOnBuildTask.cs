@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Execution;
+using Microsoft.Build.Framework;
 
 namespace Clarius.TransformOnBuild.MSBuild.Task
 {
@@ -23,7 +25,63 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
             InitPathProperties();
 
+            if (!File.Exists(_transformExe))
+            {
+                Log.LogError("Failed to find TextTransform.exe tool at '{0}'.", _transformExe);
+                return false;
+            }
+
+            var textTransform = _projectInstance.Items.Where(i =>
+            {
+                var comparer = StringComparer.InvariantCultureIgnoreCase;
+                return comparer.Equals(i.ItemType, "None") &&
+                       comparer.Equals(i.GetMetadataValue("Generator"), "TextTemplatingFileGenerator");
+            });
+
+            foreach (var templateItem in textTransform)
+            {
+                var templatePath = templateItem.GetMetadataValue("FullPath");
+
+                var result = RunTransformTool(templatePath);
+
+                if (!result)
+                    return false;
+            }
+
             return true;
+        }
+
+        private bool RunTransformTool(string templatePath)
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = _transformExe,
+                    Arguments = templatePath,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                    UseShellExecute = false
+                }
+            };
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                if (args.Data == null)
+                    return;
+                Log.LogMessageFromText(args.Data, MessageImportance.Normal);
+            };
+            process.OutputDataReceived += (sender, args) =>
+            {
+                if (args.Data == null)
+                    return;
+                Log.LogMessageFromText(args.Data, MessageImportance.Low);
+            };
+            process.Start();
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+            return process.ExitCode == 0;
         }
 
         private void InitPathProperties()
