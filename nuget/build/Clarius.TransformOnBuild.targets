@@ -17,114 +17,13 @@
 <Project
   ToolsVersion="4.0"
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <_CommonProgramFiles>$([System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'))</_CommonProgramFiles>
-    <_CommonProgramFiles
-      Condition=" '$(_CommonProgramFiles)' == '' ">$(CommonProgramFiles)</_CommonProgramFiles>
-    <TextTransformPath
-      Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformPath>
-
-    <!-- Initial default value -->
-    <_TransformExe>$(TextTransformPath)</_TransformExe>
-    <!-- Cascading probing if file not found -->
-    <_TransformExe
-      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</_TransformExe>
-    <_TransformExe
-      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe</_TransformExe>
-    <_TransformExe
-      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\12.0\TextTransform.exe</_TransformExe>
-    <!-- Future proof 'til VS2013+2 -->
-    <_TransformExe
-      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\13.0\TextTransform.exe</_TransformExe>
-    <_TransformExe
-      Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
-  </PropertyGroup>
-
   <UsingTask
     TaskName="Clarius.TransformOnBuild.MSBuild.Task.TransformOnBuildTask" 
     AssemblyFile="Clarius.TransformOnBuild.MSBuild.Task.dll"
   />
-
-  <UsingTask
-    TaskName="SubstituteTemplateProperties"
-    TaskFactory="CodeTaskFactory"
-    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
-    <ParameterGroup>
-      <TemplateFile
-        ParameterType="System.String"
-        Required="true"
-      />
-    </ParameterGroup>
-    <Task>
-      <Using
-        Namespace="System.IO"
-      />
-      <Using
-        Namespace="System.Text.RegularExpressions"
-      />
-      <Code
-        Type="Fragment"
-        Language="cs">
-<![CDATA[
-    var template = File.ReadAllText(TemplateFile);
-    template = Regex.Replace(template, @"\$\(SolutionDir\)", "");
-    File.WriteAllText(TemplateFile, template);
-]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
   <Target
     Name="TransformOnBuild"
     AfterTargets="BeforeCompile">
     <TransformOnBuildTask />
-
-    <Error
-      Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." 
-      Condition="!Exists('$(_TransformExe)')"
-    />
-
-    <ItemGroup>
-      <_TextTransform
-        Include="@(None)"
-        Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'"
-      />
-    </ItemGroup>
-
-    <Copy
-      SourceFiles="%(_TextTransform.FullPath)"
-      DestinationFiles="%(_TextTransform.FullPath).clarius_bak"
-    />
-
-    <SubstituteTemplateProperties
-      TemplateFile="%(_TextTransform.FullPath)"
-    />
-
-    <!-- Perform task batching for each file -->
-    <Exec
-      Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
-      Condition="'%(_TextTransform.Identity)' != ''"
-    />
-
-    <CallTarget
-      Targets="RestoreBackups"
-    />
-
-    <OnError
-      ExecuteTargets="RestoreBackups"
-    />
-  </Target>
-
-  <Target Name="RestoreBackups">
-    <ItemGroup>
-      <_TextTransform
-        Include="@(None)"
-        Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'"
-      />
-    </ItemGroup>
-    <Move
-      SourceFiles="%(_TextTransform.FullPath).clarius_bak"
-      DestinationFiles="%(_TextTransform.FullPath)"
-    />
   </Target>
 </Project>
