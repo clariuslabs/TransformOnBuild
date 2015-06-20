@@ -73,7 +73,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
         private string RewriteTemplateContent(string template)
         {
-            var result = Regex.Replace(template, @"(?im)(<#@\s*assembly\s+name\s+="".*?""|<#@\s*include\s+file\s+="".*?"")",
+            var result = Regex.Replace(template, @"(?im)(<#@\s*assembly\s+name\s*=\s*"".*?""|<#@\s*include\s+file\s*=\s*"".*?"")",
                 m => ExpandVariables(m.Value));
             return result;
         }
