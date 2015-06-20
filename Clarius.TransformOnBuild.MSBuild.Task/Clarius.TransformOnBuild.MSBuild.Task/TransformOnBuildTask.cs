@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
@@ -66,9 +67,19 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
         private void RewriteTemplateFile(string templatePath)
         {
-            var template = File.ReadAllText(templatePath);
+            var encoding = GetCurrentEncoding(templatePath);
+            var template = File.ReadAllText(templatePath, encoding);
             template = RewriteTemplateContent(template);
-            File.WriteAllText(templatePath, template);
+            File.WriteAllText(templatePath, template, encoding);
+        }
+
+        private static Encoding GetCurrentEncoding(string templatePath)
+        {
+            using (var streamReader = new StreamReader(templatePath))
+            {
+                streamReader.ReadLine();
+                return streamReader.CurrentEncoding;
+            }
         }
 
         private string RewriteTemplateContent(string template)
