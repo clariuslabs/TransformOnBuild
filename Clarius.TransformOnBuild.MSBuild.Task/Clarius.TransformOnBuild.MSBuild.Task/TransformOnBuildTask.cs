@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 
@@ -46,6 +48,8 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 {
                     File.Copy(templatePath, templateBackupPath, overwrite: true);
 
+                    RewriteTemplateFile(templatePath);
+
                     var result = RunTransformTool(templatePath);
 
                     if (!result)
@@ -59,6 +63,27 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             }
 
             return true;
+        }
+
+        private void RewriteTemplateFile(string templatePath)
+        {
+            var template = File.ReadAllText(templatePath);
+            template = RewriteTemplateContent(template);
+            File.WriteAllText(templatePath, template);
+        }
+
+        private string RewriteTemplateContent(string template)
+        {
+            var result = Regex.Replace(template, @"(?im)(<#@\s*assembly\s+name\s+="".*?""|<#@\s*include\s+file\s+="".*?"")",
+                m => ExpandVariables(m.Value));
+            return result;
+        }
+
+        private string ExpandVariables(string str)
+        {
+            var result = Environment.ExpandEnvironmentVariables(str);
+            result = Regex.Replace(result, @"\$\((?<PropertyName>.+?)\)", m => GetPropertyValue(m.Groups["PropertyName"].Value, throwIfNotFound: true));
+            return result;
         }
 
         private bool RunTransformTool(string templatePath)
