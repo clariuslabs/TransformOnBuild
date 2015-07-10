@@ -7,6 +7,18 @@ Usage:
 
 Release Notes:
 
+v1.16
+
+* Copy custom task assembly to the temp folder to prevent locking
+
+v1.15
+
+* Copy Local dlls to TargetDir before transformation to allow use of $(TargetDir)
+
+v1.14
+
+* Substitute MSBuild variables such as $(ProjectDir)
+
 v1.1
 
 * Disabled processing of T4 files with 'TextTemplatingFilePreprocessor' since they aren't supported by TextTemplating.exe according to http://stackoverflow.com/a/9198532.
