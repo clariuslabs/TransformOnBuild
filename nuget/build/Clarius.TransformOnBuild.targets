@@ -34,9 +34,9 @@
   />
   <Target
     Name="TransformOnBuild"
-    AfterTargets="BeforeCompile">
+    AfterTargets="BeforeBuild">
     <CallTarget
-      Targets="_CopyFilesMarkedCopyLocal"
+      Targets="ResolveReferences;_CopyFilesMarkedCopyLocal"
     />
     <TransformOnBuildTask />
   </Target>
