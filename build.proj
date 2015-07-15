@@ -52,19 +52,6 @@
 			<Readme Condition="Exists('$(ReadmePath)')">$([System.IO.File]::ReadAllText('$(ReadmePath)'))</Readme>
 		</PropertyGroup>
 
-		<ItemGroup>
-			<_NuSpecTransform Include="@(NuSpec)" Condition="'$(Readme)' != ''">
-				<Find><![CDATA[<releaseNotes />|<releaseNotes/>|<releaseNotes>.*</releaseNotes>]]></Find>
-				<ReplaceWith><![CDATA[<releaseNotes>$(Readme)</releaseNotes>]]></ReplaceWith>
-				<Options>Singleline</Options>
-			</_NuSpecTransform>
-		</ItemGroup>
-
-		<Message Text="Updating %(NuSpec.Filename)%(NuSpec.Extension) release notes from existing readme file"
-				 Condition="'$(Readme)' != ''"
-				 Importance="High" />
-		<RegexTransform Items="@(_NuSpecTransform)" Condition="'$(Readme)' != ''" />
-
         <MakeDir Directories="$(DropDir)" Condition="!Exists('$(DropDir)')" />
 
         <Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(_PackageVersion)&quot; -OutputDirectory &quot;$(DropDir)&quot;"
