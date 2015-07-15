@@ -1,6 +1,6 @@
 Usage:
 
-    Simply continue using `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom 
+    Simply continue using `TextTemplatingFileGenerator` custom 
     tools associated with your .tt/.t4 files as usual. This package will add a .targets file that 
     will also transform them on build, without requiring the installation of any Visual Studio SDK.
 
