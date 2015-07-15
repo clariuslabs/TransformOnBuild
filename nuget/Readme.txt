@@ -7,6 +7,10 @@ Usage:
 
 Release Notes:
 
+v1.17
+
+* Transform before build and manually trigger ResolveReferences
+
 v1.16
 
 * Copy custom task assembly to the temp folder to prevent locking
