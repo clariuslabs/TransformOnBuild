@@ -14,5 +14,7 @@
         <iconUrl>https://raw2.github.com/mnaoumov/TransformOnBuild/master/icon/128.png</iconUrl>
         <tags>visualstudio t4 text template transformation clariuslabs</tags>
         <developmentDependency>true</developmentDependency>
+        <releaseNotes>Fixes:
+- Transform before build and manually trigger ResolveReferences</releaseNotes>
 	</metadata>
 </package>
