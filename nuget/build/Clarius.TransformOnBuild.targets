@@ -35,8 +35,10 @@
   <Target
     Name="TransformOnBuild"
     AfterTargets="BeforeBuild">
-    <CallTarget
+    <MSBuild
+      Projects="$(MSBuildProjectFile)"
       Targets="ResolveReferences;_CopyFilesMarkedCopyLocal"
+      Properties="FakePropertyToEnsureThoseTargetsWillRunAgain=true"
     />
     <TransformOnBuildTask />
   </Target>
