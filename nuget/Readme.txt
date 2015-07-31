@@ -7,6 +7,10 @@ Usage:
 
 Release Notes:
 
+v1.18
+
+* Ensure ResolveReferences and _CopyFilesMarkedCopyLocal will run during the main build
+
 v1.17
 
 * Transform before build and manually trigger ResolveReferences
