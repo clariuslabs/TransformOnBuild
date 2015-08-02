@@ -15,6 +15,6 @@
         <tags>visualstudio t4 text template transformation clariuslabs</tags>
         <developmentDependency>true</developmentDependency>
         <releaseNotes>Fixes:
-- Transform before build and manually trigger ResolveReferences</releaseNotes>
+- Transform items with Build Action = Content</releaseNotes>
 	</metadata>
 </package>
