@@ -7,6 +7,10 @@ Usage:
 
 Release Notes:
 
+v1.19
+
+* Transform items with Build Action = Content
+
 v1.18
 
 * Ensure ResolveReferences and _CopyFilesMarkedCopyLocal will run during the main build
