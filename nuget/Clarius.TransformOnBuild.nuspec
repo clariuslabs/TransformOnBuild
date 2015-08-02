@@ -4,7 +4,7 @@
 		<id>Clarius.TransformOnBuild</id>
 		<version>1.1</version>
 		<title>Transform Text Templates On Build</title>
-		<description>Automatically transforms on build all files with a build action of `None` that have the 
+		<description>Automatically transforms on build all files with a build action of `None/Content` that have the 
         `TextTemplatingFilePreprocessor` or `TextTemplatingFileGenerator` custom tools associated, without 
         requiring the installation of any Visual Studio SDK.</description>
 		<authors>Daniel Cazzulino</authors>
