@@ -15,6 +15,7 @@
         <tags>visualstudio t4 text template transformation clariuslabs</tags>
         <developmentDependency>true</developmentDependency>
         <releaseNotes>Fixes:
-- Transform items with Build Action = Content</releaseNotes>
+- Add support for Visual Studio 2015 Update 1
+- Fix path with spaces</releaseNotes>
 	</metadata>
 </package>
