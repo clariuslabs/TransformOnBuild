@@ -163,12 +163,12 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
         private ProjectInstance GetProjectInstance()
         {
             var buildEngineType = BuildEngine.GetType();
-            var targetBuilderCallbackField = buildEngineType.GetField("targetBuilderCallback", BindingFlags);
+            var targetBuilderCallbackField = buildEngineType.GetField("targetBuilderCallback", BindingFlags) ?? buildEngineType.GetField("_targetBuilderCallback", BindingFlags);
             if (targetBuilderCallbackField == null)
                 throw new Exception("Could not extract targetBuilderCallback from " + buildEngineType.FullName);
             var targetBuilderCallback = targetBuilderCallbackField.GetValue(BuildEngine);
             var targetCallbackType = targetBuilderCallback.GetType();
-            var projectInstanceField = targetCallbackType.GetField("projectInstance", BindingFlags);
+            var projectInstanceField = targetCallbackType.GetField("projectInstance", BindingFlags) ?? targetCallbackType.GetField("_projectInstance", BindingFlags);
             if (projectInstanceField == null)
                 throw new Exception("Could not extract projectInstance from " + targetCallbackType.FullName);
             return (ProjectInstance) projectInstanceField.GetValue(targetBuilderCallback);
