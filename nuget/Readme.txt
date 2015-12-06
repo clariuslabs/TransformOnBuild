@@ -7,6 +7,12 @@ Usage:
 
 Release Notes:
 
+v1.20
+
+* Add support for Visual Studio 2015 Update 1
+
+* Fix path with spaces
+
 v1.19
 
 * Transform items with Build Action = Content
