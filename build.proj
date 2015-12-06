@@ -23,7 +23,7 @@
 		<BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
 		<BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
         <DropDir>$(MSBuildThisFileDirectory)drop</DropDir>
-		<_PackageVersion Condition="'$(PackageVersion)' == ''">1.19</_PackageVersion>
+		<_PackageVersion Condition="'$(PackageVersion)' == ''">1.20</_PackageVersion>
 		<_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>		
 		<TrackFileAccess>false</TrackFileAccess>
 		
