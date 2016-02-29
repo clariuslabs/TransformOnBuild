@@ -14,37 +14,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	
-	<PropertyGroup>
-        <_CommonProgramFiles>$([System.Environment]::GetEnvironmentVariable('CommonProgramFiles(x86)'))</_CommonProgramFiles>
-		<_CommonProgramFiles Condition=" '$(_CommonProgramFiles)' == '' ">$(CommonProgramFiles)</_CommonProgramFiles>		
-		<TextTransformPath Condition="'$(TextTransformPath)' == ''">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\$(VisualStudioVersion)\TextTransform.exe</TextTransformPath>
-        <!-- Initial default value -->
-		<_TransformExe>$(TextTransformPath)</_TransformExe>
-        <!-- Cascading probing if file not found -->
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\10.0\TextTransform.exe</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\11.0\TextTransform.exe</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\12.0\TextTransform.exe</_TransformExe>
-        <!-- Future proof 'til VS2013+2 -->
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\13.0\TextTransform.exe</_TransformExe>
-        <_TransformExe Condition="!Exists('$(_TransformExe)')">$(_CommonProgramFiles)\Microsoft Shared\TextTemplating\14.0\TextTransform.exe</_TransformExe>
-	</PropertyGroup>
-
-    <Target Name="TransformOnBuild" AfterTargets="BeforeBuild">
-
-        <Error Text="Failed to find TextTransform.exe tool at '$(_TransformExe)." 
-                Condition="!Exists('$(_TransformExe)')"/>
-
-        <ItemGroup>
-            <_TextTransform Include="@(None)"
-                            Condition="'%(None.Generator)' == 'TextTemplatingFileGenerator'" />
-        </ItemGroup>
-
-        <!-- Perform task batching for each file -->
-        <Exec Command="&quot;$(_TransformExe)&quot; &quot;%(_TextTransform.FullPath)&quot;"
-              Condition="'%(_TextTransform.Identity)' != ''"/>
-        
-    </Target>
-    
+<Project
+  ToolsVersion="4.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask
+    TaskName="Clarius.TransformOnBuild.MSBuild.Task.TransformOnBuildTask" 
+    AssemblyFile="Clarius.TransformOnBuild.MSBuild.Task.dll"
+  />
+  <Target
+    Name="TransformOnBuild"
+    AfterTargets="BeforeCompile">
+    <TransformOnBuildTask />
+  </Target>
 </Project>
