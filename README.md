@@ -1,7 +1,7 @@
 ![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/32.png) Transform Text Templates On Build
 ============
 
-Automatically transforms on build all files with a build action of `None` that have the `TextTemplatingFileGenerator` custom tools associated.
+Automatically transforms on build all files with a build action of `None/Content` that have the `TextTemplatingFileGenerator` custom tools associated.
 
 ## Installation
 
