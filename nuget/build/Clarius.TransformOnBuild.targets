@@ -24,6 +24,9 @@
   <Target
     Name="TransformOnBuild"
     AfterTargets="BeforeCompile">
+    <CallTarget
+      Targets="_CopyFilesMarkedCopyLocal"
+    />
     <TransformOnBuildTask />
   </Target>
 </Project>
