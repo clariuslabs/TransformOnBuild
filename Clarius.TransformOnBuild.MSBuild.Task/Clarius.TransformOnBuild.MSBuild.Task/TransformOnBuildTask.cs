@@ -103,7 +103,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = _transformExe,
-                    Arguments = templatePath,
+                    Arguments = $"\"{templatePath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     CreateNoWindow = true,
