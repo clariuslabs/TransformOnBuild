@@ -173,6 +173,8 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 _transformExe = string.Format(@"{0}\Microsoft Visual Studio\Preview\Professional\Common7\IDE\TextTransform.exe", _programFiles);
             if (!File.Exists(_transformExe))
                 _transformExe = string.Format(@"{0}\Microsoft Visual Studio\Preview\Enterprise\Common7\IDE\TextTransform.exe", _programFiles);
+            if (!File.Exists(_transformExe))
+                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe", _programFiles);
         }
 
         /// <summary>
