@@ -39,7 +39,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                     equalityComparer: StringComparer
                         .InvariantCultureIgnoreCase)
                 && i.GetMetadataValue("Generator").IsOneOf(
-                    values: new[] {"TextTemplatingFileGenerator"},
+                    values: new[] {"TextTemplatingFileGenerator", "TransformOnBuild"},
                     equalityComparer: StringComparer
                         .InvariantCultureIgnoreCase));
 
