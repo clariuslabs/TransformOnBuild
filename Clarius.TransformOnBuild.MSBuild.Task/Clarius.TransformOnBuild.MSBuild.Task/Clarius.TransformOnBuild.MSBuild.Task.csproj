@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="TransformOnBuildTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

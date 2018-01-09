@@ -34,11 +34,14 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             }
 
             var textTransform = _projectInstance.Items.Where(i =>
-            {
-                var comparer = StringComparer.InvariantCultureIgnoreCase;
-                return (comparer.Equals(i.ItemType, "None") || comparer.Equals(i.ItemType, "Content")) &&
-                       comparer.Equals(i.GetMetadataValue("Generator"), "TextTemplatingFileGenerator");
-            });
+                i.ItemType.IsOneOf(
+                    values: new[] {"None", "Content"},
+                    equalityComparer: StringComparer
+                        .InvariantCultureIgnoreCase)
+                && i.GetMetadataValue("Generator").IsOneOf(
+                    values: new[] {"TextTemplatingFileGenerator", "TransformOnBuild"},
+                    equalityComparer: StringComparer
+                        .InvariantCultureIgnoreCase));
 
             foreach (var templateItem in textTransform)
             {
