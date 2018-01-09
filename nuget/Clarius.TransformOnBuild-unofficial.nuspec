@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata minClientVersion="2.8">
+		<id>Clarius.TransformOnBuild-unofficial</id>
+		<version>1.20</version>
+		<title>Transform Text Templates On Build - Unofficial</title>
+		<description>Automatically transforms on build all files with a build action of `None/Content` that have the `TextTemplatingFileGenerator` custom tools associated, without 
+        requiring the installation of any Visual Studio SDK.</description>
+		<authors>Daniel Cazzulino, Michael Naumov</authors>
+        <owners>clariuslabs, danielkzu, mnaoumov</owners>
+        <language>en-US</language>
+        <licenseUrl>https://github.com/mnaoumov/TransformOnBuild/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/mnaoumov/TransformOnBuild</projectUrl>
+        <iconUrl>https://raw2.github.com/mnaoumov/TransformOnBuild/master/icon/128.png</iconUrl>
+        <tags>visualstudio t4 text template transformation clariuslabs</tags>
+        <developmentDependency>true</developmentDependency>
+        <releaseNotes>Fixes:
+- Add support for Visual Studio 2015 Update 1
+- Fix path with spaces</releaseNotes>
+	</metadata>
+</package>
