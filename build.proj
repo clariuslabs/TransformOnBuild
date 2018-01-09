@@ -23,7 +23,7 @@
 		<BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
 		<BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
         <DropDir>$(MSBuildThisFileDirectory)drop</DropDir>
-		<_PackageVersion Condition="'$(PackageVersion)' == ''">0.1</_PackageVersion>
+		<_PackageVersion Condition="'$(PackageVersion)' == ''">1.20</_PackageVersion>
 		<_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>		
 		<TrackFileAccess>false</TrackFileAccess>
 		
@@ -51,19 +51,6 @@
 			<ReadmePath>%(NuSpec.RootDir)%(NuSpec.Directory)Readme.txt</ReadmePath>
 			<Readme Condition="Exists('$(ReadmePath)')">$([System.IO.File]::ReadAllText('$(ReadmePath)'))</Readme>
 		</PropertyGroup>
-
-		<ItemGroup>
-			<_NuSpecTransform Include="@(NuSpec)" Condition="'$(Readme)' != ''">
-				<Find><![CDATA[<releaseNotes />|<releaseNotes/>|<releaseNotes>.*</releaseNotes>]]></Find>
-				<ReplaceWith><![CDATA[<releaseNotes>$(Readme)</releaseNotes>]]></ReplaceWith>
-				<Options>Singleline</Options>
-			</_NuSpecTransform>
-		</ItemGroup>
-
-		<Message Text="Updating %(NuSpec.Filename)%(NuSpec.Extension) release notes from existing readme file"
-				 Condition="'$(Readme)' != ''"
-				 Importance="High" />
-		<RegexTransform Items="@(_NuSpecTransform)" Condition="'$(Readme)' != ''" />
 
         <MakeDir Directories="$(DropDir)" Condition="!Exists('$(DropDir)')" />
 
