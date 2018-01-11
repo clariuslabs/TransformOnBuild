@@ -13,8 +13,28 @@
     <iconUrl>https://raw2.github.com/clariuslabs/TransformOnBuild/master/icon/128.png</iconUrl>
     <tags>visualstudio t4 text template transformation clariuslabs</tags>
     <developmentDependency>true</developmentDependency>
-    <releaseNotes>Fixes:
-- Add support for Visual Studio 2015 Update 1
-- Fix path with spaces</releaseNotes>
+    <releaseNotes>
+* Merged NuGet Package Clarius.TransformOnBuild-unofficial
+
+* Add support for Visual Studio 2017 and Preview
+
+* Add support for passing transform parameters
+
+* Add support for Visual Studio 2015 Update 1
+
+* Fix path with spaces
+
+* Transform items with Build Action = Content
+
+* Ensure ResolveReferences and _CopyFilesMarkedCopyLocal will run during the main build
+
+* Transform before build and manually trigger ResolveReferences
+
+* Copy custom task assembly to the temp folder to prevent locking
+
+* Copy Local dlls to TargetDir before transformation to allow use of $(TargetDir)
+
+* Substitute MSBuild variables such as $(ProjectDir)
+    </releaseNotes>
   </metadata>
 </package>
