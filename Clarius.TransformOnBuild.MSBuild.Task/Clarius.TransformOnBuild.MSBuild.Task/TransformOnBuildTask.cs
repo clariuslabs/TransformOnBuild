@@ -47,7 +47,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 .Where(item => item.ItemType.Equals("TextTransformParameter", StringComparison.InvariantCultureIgnoreCase));
 
             var textTransformParameters = string.Concat(
-                textTransformParameterItems.Select(item => $"-a \"!!{item.EvaluatedInclude}!{item.GetMetadataValue("Value")} "));
+                textTransformParameterItems.Select(item => $"-a \"!!{item.EvaluatedInclude}!{item.GetMetadataValue("Value")}\" "));
 
             foreach (var templateItem in textTransform)
             {
