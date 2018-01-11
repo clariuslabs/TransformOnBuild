@@ -1,0 +1,31 @@
+﻿Testing output extension
+
+Test parameter 1: ResolveParameterValue testParameter1 failed with
+System.ArgumentNullException: Value cannot be null.
+Parameter name: directiveId
+
+Server stack trace: 
+   at Microsoft.VisualStudio.TextTemplating.VSHost.TextTemplatingService.ResolveParameterValue(String directiveId, String processorName, String parameterName)
+   at System.Runtime.Remoting.Messaging.StackBuilderSink._PrivateProcessMessage(IntPtr md, Object[] args, Object server, Object[]& outArgs)
+   at System.Runtime.Remoting.Messaging.StackBuilderSink.SyncProcessMessage(IMessage msg)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost.ResolveParameterValue(String directiveId, String processorName, String parameterName)
+   at Microsoft.VisualStudio.TextTemplating26017E43AE941130A931ED6654DD561BAD8D2380E172009FD317B361136424FC5C35BFF3614BD748B0A556412A04B7BA876320CDA083F0E01F2A932561838B4F.GeneratedTextTransformation.TransformText()
+Test parameter 2: ResolveParameterValue testParameter2 failed with
+System.ArgumentNullException: Value cannot be null.
+Parameter name: directiveId
+
+Server stack trace: 
+   at Microsoft.VisualStudio.TextTemplating.VSHost.TextTemplatingService.ResolveParameterValue(String directiveId, String processorName, String parameterName)
+   at System.Runtime.Remoting.Messaging.StackBuilderSink._PrivateProcessMessage(IntPtr md, Object[] args, Object server, Object[]& outArgs)
+   at System.Runtime.Remoting.Messaging.StackBuilderSink.SyncProcessMessage(IMessage msg)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost.ResolveParameterValue(String directiveId, String processorName, String parameterName)
+   at Microsoft.VisualStudio.TextTemplating26017E43AE941130A931ED6654DD561BAD8D2380E172009FD317B361136424FC5C35BFF3614BD748B0A556412A04B7BA876320CDA083F0E01F2A932561838B4F.GeneratedTextTransformation.TransformText()
+

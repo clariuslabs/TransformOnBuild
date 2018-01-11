@@ -1,0 +1,28 @@
+﻿<#@ template hostspecific="true" language="C#" #>
+<#@ output extension=".txt" #>
+Testing output extension
+<#
+    string testParameter1;
+    string testParameter2;
+    try
+    {
+         testParameter1 = this.Host.ResolveParameterValue("", "", "TestParameter1");
+    }
+    catch (Exception e)
+    {
+         testParameter1 = "ResolveParameterValue testParameter1 failed with\r\n" + e.ToString();
+    }
+
+    try
+    {
+         testParameter2 = this.Host.ResolveParameterValue("", "", "TestParameter2");
+    }
+    catch (Exception e)
+    {
+         testParameter2 = "ResolveParameterValue testParameter2 failed with\r\n" + e.ToString();
+    }
+#>
+
+Test parameter 1: <#= testParameter1 #>
+Test parameter 2: <#= testParameter2 #>
+
