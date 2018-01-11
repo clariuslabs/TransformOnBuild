@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" %~dp0\build.proj /verbosity:normal /nr:false /p:PackageVersion=%PackageVersion% /p:AutoPush=false
