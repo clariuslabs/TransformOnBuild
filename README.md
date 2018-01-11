@@ -27,9 +27,11 @@ If you would like to pass parameters to TextTransform.exe, define a group of Tex
     <ItemGroup>
         <TextTransformParameter Include="Foo">
             <Value>bar</Value>
+            <InProject>false</InProject>
         </TextTransformParameter>
         <TextTransformParameter Include="Config">
             <Value>$(Configuration)</Value>
+            <InProject>false</InProject>
         </TextTransformParameter>
     </ItemGroup>
 

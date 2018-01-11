@@ -68,9 +68,11 @@
   <ItemGroup>
     <TextTransformParameter Include="Foo">
       <Value>bar</Value>
+      <InProject>false</InProject>
     </TextTransformParameter>
     <TextTransformParameter Include="Config">
       <Value>$(Configuration)</Value>
+      <InProject>false</InProject>
     </TextTransformParameter>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
