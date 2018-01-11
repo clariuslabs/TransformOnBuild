@@ -144,18 +144,18 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             var textTransformPathCandiates = new[]
             {
                 GetPropertyValue("TextTransformPath"),
-                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\{GetPropertyValue("VisualStudioVersion")}\TextTransform.exe",
-                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe",
-                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\11.0\TextTransform.exe",
-                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\12.0\TextTransform.exe",
-                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\13.0\TextTransform.exe",
-                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\14.0\TextTransform.exe",
-                $@"{_programFiles}\Microsoft Visual Studio\2017\Professional\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\2017\Professional\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\2017\Community\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\Preview\Professional\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\Preview\Enterprise\Common7\IDE\TextTransform.exe",
-                $@"{_programFiles}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe"
+                $@"{_programFiles}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\{GetPropertyValue("VisualStudioVersion")}\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\14.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\13.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\12.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\11.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe"
             };
 
             foreach (var textTransformPathCandiate in textTransformPathCandiates)
