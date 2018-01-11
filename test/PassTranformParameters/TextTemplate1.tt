@@ -2,27 +2,27 @@
 <#@ output extension=".txt" #>
 Testing output extension
 <#
-    string testParameter1;
-    string testParameter2;
+    string foo;
+    string config;
     try
     {
-         testParameter1 = this.Host.ResolveParameterValue("", "", "TestParameter1");
+         foo = this.Host.ResolveParameterValue("", "", "Foo");
     }
     catch (Exception e)
     {
-         testParameter1 = "ResolveParameterValue testParameter1 failed with\r\n" + e.ToString();
+         foo = "ResolveParameterValue foo failed with\r\n" + e.ToString();
     }
 
     try
     {
-         testParameter2 = this.Host.ResolveParameterValue("", "", "TestParameter2");
+         config = this.Host.ResolveParameterValue("", "", "Config");
     }
     catch (Exception e)
     {
-         testParameter2 = "ResolveParameterValue testParameter2 failed with\r\n" + e.ToString();
+         config = "ResolveParameterValue config failed with\r\n" + e.ToString();
     }
 #>
 
-Test parameter 1: <#= testParameter1 #>
-Test parameter 2: <#= testParameter2 #>
+Foo: <#= foo #>
+Config: <#= config #>
 

@@ -65,6 +65,14 @@
       <Name>Clarius.TransformOnBuild.MSBuild.Task</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <TextTransformParameter Include="Foo">
+      <Value>bar</Value>
+    </TextTransformParameter>
+    <TextTransformParameter Include="Config">
+      <Value>$(Configuration)</Value>
+    </TextTransformParameter>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\nuget\build\Clarius.TransformOnBuild.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

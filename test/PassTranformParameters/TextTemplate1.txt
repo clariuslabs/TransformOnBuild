@@ -1,5 +1,5 @@
 ﻿Testing output extension
 
-Test parameter 1: 
-Test parameter 2: 
+Foo: bar -a !!Config!Debug
+Config: 
 
