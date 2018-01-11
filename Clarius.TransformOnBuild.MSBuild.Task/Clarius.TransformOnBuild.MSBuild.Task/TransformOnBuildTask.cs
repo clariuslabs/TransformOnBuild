@@ -15,9 +15,8 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
     {
         private ProjectInstance _projectInstance;
         private Dictionary<string, string> _properties;
+        private string _programFiles;
         private string _commonProgramFiles;
-        private string _textTransformPath;
-        private string _transformExe;
         const BindingFlags BindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public;
 
         public override bool Execute()
@@ -25,13 +24,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             _projectInstance = GetProjectInstance();
             _properties = _projectInstance.Properties.ToDictionary(p => p.Name, p => p.EvaluatedValue);
 
-            InitPathProperties();
-
-            if (!File.Exists(_transformExe))
-            {
-                Log.LogError("Failed to find TextTransform.exe tool at '{0}'.", _transformExe);
-                return false;
-            }
+            var textTransformExePath = GetTextTransformExePath();
 
             var textTransform = _projectInstance.Items.Where(i =>
                 i.ItemType.IsOneOf(
@@ -59,7 +52,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
                     RewriteTemplateFile(templatePath);
 
-                    var result = RunTransformTool(templatePath, textTransformParameters);
+                    var result = RunTransformTool(textTransformExePath, templatePath, textTransformParameters);
 
                     if (!result)
                         return false;
@@ -105,13 +98,13 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return result;
         }
 
-        private bool RunTransformTool(string templatePath, string textTransformParameters)
+        private bool RunTransformTool(string textTransformExePath, string templatePath, string textTransformParameters)
         {
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = _transformExe,
+                    FileName = textTransformExePath,
                     Arguments = $"{textTransformParameters}\"{templatePath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -138,31 +131,42 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return process.ExitCode == 0;
         }
 
-        private void InitPathProperties()
+        private string GetTextTransformExePath()
         {
             _commonProgramFiles = Environment.GetEnvironmentVariable("CommonProgramFiles(x86)");
             if (string.IsNullOrEmpty(_commonProgramFiles))
                 _commonProgramFiles = GetPropertyValue("CommonProgramFiles");
 
-            _textTransformPath = GetPropertyValue("TextTransformPath");
-            if (string.IsNullOrEmpty(_textTransformPath))
-                _textTransformPath = string.Format(@"{0}\Microsoft Shared\TextTemplating\{1}\TextTransform.exe", _commonProgramFiles, GetPropertyValue("VisualStudioVersion"));
+            _programFiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            if (string.IsNullOrEmpty(_programFiles))
+                _programFiles = GetPropertyValue("ProgramFiles");
 
-            // Initial default value
-            _transformExe = _textTransformPath;
+            var textTransformPathCandiates = new[]
+            {
+                GetPropertyValue("TextTransformPath"),
+                $@"{_programFiles}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\2017\Professional\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\2017\Community\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\Preview\Professional\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\Preview\Enterprise\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\{GetPropertyValue("VisualStudioVersion")}\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\14.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\13.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\12.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\11.0\TextTransform.exe",
+                $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe"
+            };
 
-            // Cascading probing if file not found
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe", _commonProgramFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\11.0\TextTransform.exe", _commonProgramFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\12.0\TextTransform.exe", _commonProgramFiles);
-            // Future proof 'til VS2013+2
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\13.0\TextTransform.exe", _commonProgramFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\14.0\TextTransform.exe", _commonProgramFiles);
+            foreach (var textTransformPathCandiate in textTransformPathCandiates)
+            {
+                if (!string.IsNullOrEmpty(textTransformPathCandiate) && File.Exists(textTransformPathCandiate))
+                {
+                    return textTransformPathCandiate;
+                }
+            }
+
+            throw new Exception("Failed to find TextTransform.exe");
         }
 
         /// <summary>
