@@ -17,7 +17,6 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
         private Dictionary<string, string> _properties;
         private string _programFiles;
         private string _commonProgramFiles;
-        private string _textTransformPath;
         private string _transformExe;
         const BindingFlags BindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public;
 
@@ -149,41 +148,38 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             if (string.IsNullOrEmpty(_programFiles))
                 _programFiles = GetPropertyValue("ProgramFiles");
 
-            _textTransformPath = GetPropertyValue("TextTransformPath");
-            if (string.IsNullOrEmpty(_textTransformPath))
-                _textTransformPath = string.Format(@"{0}\Microsoft Shared\TextTemplating\{1}\TextTransform.exe", _commonProgramFiles, GetPropertyValue("VisualStudioVersion"));
+            var textTransformPathCandiates = new[]
+            {
+                GetPropertyValue("TextTransformPath"),
+                string.Format(@"{0}\Microsoft Shared\TextTemplating\{1}\TextTransform.exe", _commonProgramFiles,
+                    GetPropertyValue("VisualStudioVersion")),
+                string.Format(@"{0}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe", _commonProgramFiles),
+                string.Format(@"{0}\Microsoft Shared\TextTemplating\11.0\TextTransform.exe", _commonProgramFiles),
+                string.Format(@"{0}\Microsoft Shared\TextTemplating\12.0\TextTransform.exe", _commonProgramFiles),
+                string.Format(@"{0}\Microsoft Shared\TextTemplating\13.0\TextTransform.exe", _commonProgramFiles),
+                string.Format(@"{0}\Microsoft Shared\TextTemplating\14.0\TextTransform.exe", _commonProgramFiles),
+                string.Format(@"{0}\Microsoft Visual Studio\2017\Professional\Common7\IDE\TextTransform.exe",
+                    _programFiles),
+                string.Format(@"{0}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe",
+                    _programFiles),
+                string.Format(@"{0}\Microsoft Visual Studio\2017\Community\Common7\IDE\TextTransform.exe",
+                    _programFiles),
+                string.Format(@"{0}\Microsoft Visual Studio\Preview\Professional\Common7\IDE\TextTransform.exe",
+                    _programFiles),
+                string.Format(@"{0}\Microsoft Visual Studio\Preview\Enterprise\Common7\IDE\TextTransform.exe",
+                    _programFiles),
+                string.Format(@"{0}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe",
+                    _programFiles)
+            };
 
-            // Initial default value
-            _transformExe = _textTransformPath;
-
-            // Cascading probing if file not found
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe", _commonProgramFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\11.0\TextTransform.exe", _commonProgramFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\12.0\TextTransform.exe", _commonProgramFiles);
-            // Future proof 'til VS2013+2
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\13.0\TextTransform.exe", _commonProgramFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Shared\TextTemplating\14.0\TextTransform.exe", _commonProgramFiles);
-            
-            // VS2017 changed the location of the TextTransform.exe tool
-            // See https://docs.microsoft.com/en-us/visualstudio/modeling/generating-files-with-the-texttransform-utility
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\2017\Professional\Common7\IDE\TextTransform.exe", _programFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe", _programFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\2017\Community\Common7\IDE\TextTransform.exe", _programFiles);
-            // Preview versions live in their own subfolder...
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\Preview\Professional\Common7\IDE\TextTransform.exe", _programFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\Preview\Enterprise\Common7\IDE\TextTransform.exe", _programFiles);
-            if (!File.Exists(_transformExe))
-                _transformExe = string.Format(@"{0}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe", _programFiles);
+            foreach (var textTransformPathCandiate in textTransformPathCandiates)
+            {
+                if (!string.IsNullOrEmpty(textTransformPathCandiate) && File.Exists(textTransformPathCandiate))
+                {
+                    _transformExe = textTransformPathCandiate;
+                    return;
+                }
+            }
         }
 
         /// <summary>
