@@ -18,24 +18,24 @@
          DefaultTargets="Build"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<PropertyGroup>
+  <PropertyGroup>
         <AutoPush Condition="'$(AutoPush)' == ''">false</AutoPush>
-		<BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
-		<BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
+    <BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
+    <BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
         <DropDir>$(MSBuildThisFileDirectory)drop</DropDir>
-		<_PackageVersion Condition="'$(PackageVersion)' == ''">1.20</_PackageVersion>
-		<_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>		
-		<TrackFileAccess>false</TrackFileAccess>
-		
-		<!-- MyGet already provides a %nuget% environment variable with its own nuget path -->
-		<nuget Condition="'$(nuget)' == ''">$(SolutionDir).nuget\nuget.exe</nuget>
-	</PropertyGroup>
-	
-	<ItemGroup>
-		<NuSpec Include="**\*.nuspec" />
-		<PackageConfig Include="**\packages.config" />
-	</ItemGroup>
-		
+    <_PackageVersion Condition="'$(PackageVersion)' == ''">1.20</_PackageVersion>
+    <_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>    
+    <TrackFileAccess>false</TrackFileAccess>
+    
+    <!-- MyGet already provides a %nuget% environment variable with its own nuget path -->
+    <nuget Condition="'$(nuget)' == ''">$(SolutionDir).nuget\nuget.exe</nuget>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <NuSpec Include="**\*.nuspec" />
+    <PackageConfig Include="**\packages.config" />
+  </ItemGroup>
+    
     <Target Name="Build" DependsOnTargets="BuildMSBuildTask;BuildNuGet;PushNuGet" />
 
     <Target
@@ -46,45 +46,45 @@
     </Target>
 
 
-	<Target Name="BuildNuGet" Inputs="@(NuSpec)" Outputs="%(Identity)-BATCH" DependsOnTargets="_DownloadNuGet;RestorePackages">      
-		<PropertyGroup>
-			<ReadmePath>%(NuSpec.RootDir)%(NuSpec.Directory)Readme.txt</ReadmePath>
-			<Readme Condition="Exists('$(ReadmePath)')">$([System.IO.File]::ReadAllText('$(ReadmePath)'))</Readme>
-		</PropertyGroup>
+  <Target Name="BuildNuGet" Inputs="@(NuSpec)" Outputs="%(Identity)-BATCH" DependsOnTargets="_DownloadNuGet;RestorePackages">      
+    <PropertyGroup>
+      <ReadmePath>%(NuSpec.RootDir)%(NuSpec.Directory)Readme.txt</ReadmePath>
+      <Readme Condition="Exists('$(ReadmePath)')">$([System.IO.File]::ReadAllText('$(ReadmePath)'))</Readme>
+    </PropertyGroup>
 
         <MakeDir Directories="$(DropDir)" Condition="!Exists('$(DropDir)')" />
 
         <Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(_PackageVersion)&quot; -OutputDirectory &quot;$(DropDir)&quot;"
               ContinueOnError="false" />
-	</Target>
+  </Target>
 
     <Target Name="PushNuGet" Condition="'$(AutoPush)' == 'true'">
         <Exec Command="&quot;$(nuget)&quot; push &quot;$(DropDir)\*&quot;" ContinueOnError="false" />
     </Target>
    
-	<Target Name="RestorePackages" Condition="'@(PackageConfig)' != ''">
-		<Message Text="Restoring NuGet packages..." Importance="High" />
-		<Exec Command="$(nuget) restore %(PackageConfig.FullPath) -NonInteractive -Verbosity quiet" />
-	</Target>
+  <Target Name="RestorePackages" Condition="'@(PackageConfig)' != ''">
+    <Message Text="Restoring NuGet packages..." Importance="High" />
+    <Exec Command="$(nuget) restore %(PackageConfig.FullPath) -NonInteractive -Verbosity quiet" />
+  </Target>
 
-	<Target Name="_DownloadNuGet" Condition="!Exists('$(nuget)')">
-		<MakeDir Directories="$(BuildRoot).nuget" />
-		<DownloadNuGet OutputFilename="$(nuget)" />
-	</Target>
+  <Target Name="_DownloadNuGet" Condition="!Exists('$(nuget)')">
+    <MakeDir Directories="$(BuildRoot).nuget" />
+    <DownloadNuGet OutputFilename="$(nuget)" />
+  </Target>
 
-	<UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-		<ParameterGroup>
-			<OutputFilename ParameterType="System.String" Required="true" />
-		</ParameterGroup>
-		<Task>
-			<Reference Include="System.Core" />
-			<Using Namespace="System" />
-			<Using Namespace="System.IO" />
-			<Using Namespace="System.Net" />
-			<Using Namespace="Microsoft.Build.Framework" />
-			<Using Namespace="Microsoft.Build.Utilities" />
-			<Code Type="Fragment" Language="cs">
-				<![CDATA[
+  <UsingTask TaskName="DownloadNuGet" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <OutputFilename ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Core" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Net" />
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Using Namespace="Microsoft.Build.Utilities" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
          try {
              OutputFilename = Path.GetFullPath(OutputFilename);
 
@@ -99,13 +99,13 @@
              return false;
          }
        ]]>
-			</Code>
-		</Task>
-	</UsingTask>
+      </Code>
+    </Task>
+  </UsingTask>
 
-	<!--
+  <!--
     ============================================================
-				RegexTransform
+        RegexTransform
 
     Transforms the input Items parameter by evaluating the 
     regular expression in their Find metadata and 
@@ -123,19 +123,19 @@
         <RegexTransform Items="@(RegexTransform)" />   
     ============================================================
     -->
-	<UsingTask TaskName="RegexTransform"
+  <UsingTask TaskName="RegexTransform"
                TaskFactory="CodeTaskFactory"
                AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-		<ParameterGroup>
-			<Items ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
-		</ParameterGroup>
-		<Task>
-			<Using Namespace="System.IO" />
-			<Using Namespace="System.Text.RegularExpressions" />
-			<Using Namespace="Microsoft.Build.Framework" />
-			<Code Type="Fragment"
+    <ParameterGroup>
+      <Items ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Code Type="Fragment"
                   Language="cs">
-				<![CDATA[
+        <![CDATA[
            foreach(var item in Items)
            {
              string fileName = item.GetMetadata("FullPath");
@@ -163,8 +163,8 @@
              );
            }
          ]]>
-			</Code>
-		</Task>
-	</UsingTask>
+      </Code>
+    </Task>
+  </UsingTask>
 
 </Project>
