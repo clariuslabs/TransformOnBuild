@@ -17,7 +17,6 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
         private Dictionary<string, string> _properties;
         private string _programFiles;
         private string _commonProgramFiles;
-        private string _transformExe;
         const BindingFlags BindingFlags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public;
 
         public override bool Execute()
@@ -25,13 +24,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             _projectInstance = GetProjectInstance();
             _properties = _projectInstance.Properties.ToDictionary(p => p.Name, p => p.EvaluatedValue);
 
-            InitPathProperties();
-
-            if (!File.Exists(_transformExe))
-            {
-                Log.LogError("Failed to find TextTransform.exe tool at '{0}'.", _transformExe);
-                return false;
-            }
+            var textTransformExePath = GetTextTransformExePath();
 
             var textTransform = _projectInstance.Items.Where(i =>
                 i.ItemType.IsOneOf(
@@ -59,7 +52,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
                     RewriteTemplateFile(templatePath);
 
-                    var result = RunTransformTool(templatePath, textTransformParameters);
+                    var result = RunTransformTool(textTransformExePath, templatePath, textTransformParameters);
 
                     if (!result)
                         return false;
@@ -105,13 +98,13 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return result;
         }
 
-        private bool RunTransformTool(string templatePath, string textTransformParameters)
+        private bool RunTransformTool(string textTransformExePath, string templatePath, string textTransformParameters)
         {
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = _transformExe,
+                    FileName = textTransformExePath,
                     Arguments = $"{textTransformParameters}\"{templatePath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -138,7 +131,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return process.ExitCode == 0;
         }
 
-        private void InitPathProperties()
+        private string GetTextTransformExePath()
         {
             _commonProgramFiles = Environment.GetEnvironmentVariable("CommonProgramFiles(x86)");
             if (string.IsNullOrEmpty(_commonProgramFiles))
@@ -176,10 +169,11 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             {
                 if (!string.IsNullOrEmpty(textTransformPathCandiate) && File.Exists(textTransformPathCandiate))
                 {
-                    _transformExe = textTransformPathCandiate;
-                    return;
+                    return textTransformPathCandiate;
                 }
             }
+
+            throw new Exception("Failed to find TextTransform.exe");
         }
 
         /// <summary>
