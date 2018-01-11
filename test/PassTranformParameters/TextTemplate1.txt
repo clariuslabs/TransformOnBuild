@@ -1,5 +1,5 @@
 ﻿Testing output extension
 
-Foo: bar -a !!Config!Debug
-Config: 
+Foo: bar
+Config: Debug
 
