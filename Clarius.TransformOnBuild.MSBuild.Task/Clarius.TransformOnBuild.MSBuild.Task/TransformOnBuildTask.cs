@@ -43,6 +43,12 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                     equalityComparer: StringComparer
                         .InvariantCultureIgnoreCase));
 
+            var textTransformParameterItems = _projectInstance.Items
+                .Where(item => item.ItemType.Equals("TextTransformParameter", StringComparison.InvariantCultureIgnoreCase));
+
+            var textTransformParameters = string.Concat(
+                textTransformParameterItems.Select(item => $"-a \"!!{item.EvaluatedInclude}!{item.GetMetadataValue("Value")}\" "));
+
             foreach (var templateItem in textTransform)
             {
                 var templatePath = templateItem.GetMetadataValue("FullPath");
@@ -53,7 +59,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
                     RewriteTemplateFile(templatePath);
 
-                    var result = RunTransformTool(templatePath);
+                    var result = RunTransformTool(templatePath, textTransformParameters);
 
                     if (!result)
                         return false;
@@ -99,14 +105,14 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return result;
         }
 
-        private bool RunTransformTool(string templatePath)
+        private bool RunTransformTool(string templatePath, string textTransformParameters)
         {
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = _transformExe,
-                    Arguments = $"\"{templatePath}\"",
+                    Arguments = $"{textTransformParameters}\"{templatePath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     CreateNoWindow = true,

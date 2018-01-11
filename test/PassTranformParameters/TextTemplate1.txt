@@ -1,0 +1,5 @@
+﻿Testing output extension
+
+Foo: bar
+Config: Debug
+
