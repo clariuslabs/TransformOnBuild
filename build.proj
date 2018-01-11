@@ -23,8 +23,6 @@
     <BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .gitignore))</BuildRoot>
     <BuildRoot Condition="!HasTrailingSlash('$(BuildRoot)')">$(BuildRoot)\</BuildRoot>
         <DropDir>$(MSBuildThisFileDirectory)drop</DropDir>
-    <_PackageVersion Condition="'$(PackageVersion)' == ''">1.20</_PackageVersion>
-    <_PackageVersion Condition="'$(PackageVersion)' != ''">$(PackageVersion)</_PackageVersion>    
     <TrackFileAccess>false</TrackFileAccess>
     
     <!-- MyGet already provides a %nuget% environment variable with its own nuget path -->
@@ -36,7 +34,15 @@
     <PackageConfig Include="**\packages.config" />
   </ItemGroup>
     
-    <Target Name="Build" DependsOnTargets="BuildMSBuildTask;BuildNuGet;PushNuGet" />
+    <Target Name="Build" DependsOnTargets="ValidateParameters;BuildMSBuildTask;BuildNuGet;PushNuGet" />
+
+    <Target
+      Name="ValidateParameters">
+      <Error  
+        Text="PackageVersion variable is not set"  
+        Condition="'$(PackageVersion)' == ''"
+      />
+    </Target>
 
     <Target
       Name="BuildMSBuildTask">
@@ -54,7 +60,7 @@
 
         <MakeDir Directories="$(DropDir)" Condition="!Exists('$(DropDir)')" />
 
-        <Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(_PackageVersion)&quot; -OutputDirectory &quot;$(DropDir)&quot;"
+        <Exec Command="&quot;$(nuget)&quot; pack -NoPackageAnalysis &quot;%(NuSpec.FullPath)&quot; -Version &quot;$(PackageVersion)&quot; -OutputDirectory &quot;$(DropDir)&quot;"
               ContinueOnError="false" />
   </Target>
 
