@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata minClientVersion="2.8">
     <id>Clarius.TransformOnBuild</id>
-    <version>1.20</version>
+    <version>1.22</version>
     <title>Transform Text Templates On Build</title>
     <description>Automatically transforms on build all files with a build action of `None/Content` that have the `TextTemplatingFileGenerator` custom tools associated, without requiring the installation of any Visual Studio SDK.</description>
     <authors>Daniel Cazzulino, Michael Naumov</authors>
@@ -14,27 +14,11 @@
     <tags>visualstudio t4 text template transformation clariuslabs</tags>
     <developmentDependency>true</developmentDependency>
     <releaseNotes>
-* Merged NuGet Package Clarius.TransformOnBuild-unofficial
+* Fixed support for Visual Studio 2017 v15.8 - possible regression with Visual Studio dll lock file
 
-* Add support for Visual Studio 2017 and Preview
+* Add support for Visual Studio 2017 BuildTools
 
-* Add support for passing transform parameters
-
-* Add support for Visual Studio 2015 Update 1
-
-* Fix path with spaces
-
-* Transform items with Build Action = Content
-
-* Ensure ResolveReferences and _CopyFilesMarkedCopyLocal will run during the main build
-
-* Transform before build and manually trigger ResolveReferences
-
-* Copy custom task assembly to the temp folder to prevent locking
-
-* Copy Local dlls to TargetDir before transformation to allow use of $(TargetDir)
-
-* Substitute MSBuild variables such as $(ProjectDir)
+* Don't clutter project folder with temporary backup files
     </releaseNotes>
   </metadata>
 </package>

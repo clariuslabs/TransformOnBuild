@@ -6,6 +6,14 @@ Usage:
 
 Release Notes:
 
+v1.22
+
+* Fixed support for Visual Studio 2017 v15.8 - possible regression with Visual Studio dll lock file
+
+* Add support for Visual Studio 2017 BuildTools
+
+* Don't clutter project folder with temporary backup files
+
 v1.21
 
 * Merged NuGet Package Clarius.TransformOnBuild-unofficial
