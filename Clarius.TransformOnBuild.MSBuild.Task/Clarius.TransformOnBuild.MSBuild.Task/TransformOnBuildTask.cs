@@ -11,6 +11,7 @@ using Microsoft.Build.Framework;
 
 namespace Clarius.TransformOnBuild.MSBuild.Task
 {
+    // ReSharper disable once UnusedMember.Global
     public class TransformOnBuildTask : Microsoft.Build.Utilities.Task
     {
         private ProjectInstance _projectInstance;
@@ -28,11 +29,11 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
 
             var textTransform = _projectInstance.Items.Where(i =>
                 i.ItemType.IsOneOf(
-                    values: new[] {"None", "Content"},
+                    values: new[] { "None", "Content" },
                     equalityComparer: StringComparer
                         .InvariantCultureIgnoreCase)
                 && i.GetMetadataValue("Generator").IsOneOf(
-                    values: new[] {"TextTemplatingFileGenerator", "TransformOnBuild"},
+                    values: new[] { "TextTemplatingFileGenerator", "TransformOnBuild" },
                     equalityComparer: StringComparer
                         .InvariantCultureIgnoreCase));
 
@@ -98,7 +99,9 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return result;
         }
 
+        // ReSharper disable InconsistentNaming
         private bool RunTransformTool(string textTransformExePath, string templatePath, string textTransformParameters)
+        // ReSharper restore InconsistentNaming
         {
             var process = new Process
             {
@@ -141,7 +144,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             if (string.IsNullOrEmpty(_programFiles))
                 _programFiles = GetPropertyValue("ProgramFiles");
 
-            var textTransformPathCandiates = new[]
+            var textTransformPathCandidates = new[]
             {
                 GetPropertyValue("TextTransformPath"),
                 $@"{_programFiles}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe",
@@ -159,11 +162,11 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 $@"{_commonProgramFiles}\Microsoft Shared\TextTemplating\10.0\TextTransform.exe"
             };
 
-            foreach (var textTransformPathCandiate in textTransformPathCandiates)
+            foreach (var textTransformPathCandidate in textTransformPathCandidates)
             {
-                if (!string.IsNullOrEmpty(textTransformPathCandiate) && File.Exists(textTransformPathCandiate))
+                if (!string.IsNullOrEmpty(textTransformPathCandidate) && File.Exists(textTransformPathCandidate))
                 {
-                    return textTransformPathCandiate;
+                    return textTransformPathCandidate;
                 }
             }
 
@@ -188,13 +191,13 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             return (ProjectInstance) projectInstanceField.GetValue(targetBuilderCallback);
         }
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private string GetPropertyValue(string propertyName, bool throwIfNotFound = false)
         {
-            string propertyValue;
-            if (_properties.TryGetValue(propertyName, out propertyValue))
+            if (_properties.TryGetValue(propertyName, out var propertyValue))
                 return propertyValue;
             if (throwIfNotFound)
-                throw new Exception(string.Format("Could not resolve property $({0})", propertyName));
+                throw new Exception($"Could not resolve property $({propertyName})");
             return "";
         }
     }
