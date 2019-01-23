@@ -147,6 +147,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
                 $@"{_programFiles}\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\2017\Professional\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\2017\Community\Common7\IDE\TextTransform.exe",
+                $@"{_programFiles}\Microsoft Visual Studio\2017\BuildTools\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\Preview\Professional\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\Preview\Enterprise\Common7\IDE\TextTransform.exe",
                 $@"{_programFiles}\Microsoft Visual Studio\Preview\Community\Common7\IDE\TextTransform.exe",
