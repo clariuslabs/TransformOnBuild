@@ -36,7 +36,7 @@ function DownloadNuGet
     $nugetPath = "$PSScriptRoot\.nuget\nuget.exe"
     $nuGetExeUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
-    if (-not (Test-Path -Path $nugetPath)
+    if (-not (Test-Path -Path $nugetPath))
     {
         New-Item -Path ($nugetPath | Split-Path) -ItemType Directory -Force
         Invoke-WebRequest -Uri $nuGetExeUrl -OutFile $nugetPath
