@@ -17,20 +17,9 @@
 <Project
   ToolsVersion="4.0"
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <TempFolder>$([System.IO.Path]::GetTempPath())$([System.Guid]::NewGuid())</TempFolder>
-  </PropertyGroup>
-  <Target
-    Name="CopyTaskAssemblyToTempFolder"
-    BeforeTargets="BeforeBuild">
-    <Copy
-      SourceFiles="$(MSBuildThisFileDirectory)Clarius.TransformOnBuild.MSBuild.Task.dll"
-      DestinationFolder="$(TempFolder)"
-    />
-  </Target>
   <UsingTask
     TaskName="Clarius.TransformOnBuild.MSBuild.Task.TransformOnBuildTask" 
-    AssemblyFile="$(TempFolder)\Clarius.TransformOnBuild.MSBuild.Task.dll"
+    AssemblyFile="$(MSBuildThisFileDirectory)\Clarius.TransformOnBuild.MSBuild.Task.dll"
   />
   <Target
     Name="TransformOnBuild"
