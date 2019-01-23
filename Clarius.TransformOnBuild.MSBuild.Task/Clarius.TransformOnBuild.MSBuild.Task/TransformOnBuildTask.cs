@@ -45,7 +45,7 @@ namespace Clarius.TransformOnBuild.MSBuild.Task
             foreach (var templateItem in textTransform)
             {
                 var templatePath = templateItem.GetMetadataValue("FullPath");
-                var templateBackupPath = templatePath + ".bak_clarius";
+                var templateBackupPath = Path.GetTempFileName();
                 try
                 {
                     File.Copy(templatePath, templateBackupPath, overwrite: true);
