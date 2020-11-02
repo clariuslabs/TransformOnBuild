@@ -1,6 +1,15 @@
 ![Icon](https://raw.github.com/clariuslabs/TransformOnBuild/master/icon/32.png) Transform Text Templates On Build
 ============
 
+> NOTE: this repository is no longer actively maintained. T4 has long been surpassed by far more capable 
+> templating alternatives (i.e. Scriban and may others) and there's even an open source [Mono implementation](https://www.nuget.org/packages/Mono.TextTemplating/) 
+> which is far faster that the (effectively legacy) T4 in VS. Running T4 templates as part of the build 
+> did never seem to be a core design or intended usage, and it's consequently quite painful and slow in general.
+> Switching CI and updating the project to use newer techniques and fix the many reported issues is something 
+> that just didn't make sense anymore.
+> Feel free to fork and do anything you want with it, that's the beauty of open source :).
+> If you want to volunteer as a maintainer, please let us know at https://github.com/clariuslabs/TransformOnBuild/issues/68
+
 Automatically transforms on build all files with a build action of `None` or `Content` that have the `TextTemplatingFileGenerator` or `TransformOnBuild` custom tools associated.
 
 ## Installation
